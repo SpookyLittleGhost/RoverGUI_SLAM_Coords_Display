@@ -1,16 +1,19 @@
-# This is a sample Python script.
+import threading
 
-# Press Umschalt+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+import gui_display
+import input_listener
 
+print("!-- MAIN PROGRAM STARTED --!")
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Strg+F8 to toggle the breakpoint.
+gui_display.prepare_window_size()
 
+gui_display_thread = threading.Thread(target=gui_display.start, args=())
+input_listener_thread = threading.Thread(target=input_listener.start, args=[gui_display])
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+input_listener_thread.start()
+gui_display_thread.start()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+input_listener_thread.join()
+gui_display_thread.join()
+
+print("!--- MAIN PROGRAM TERMINATED ---!")
